@@ -3,9 +3,10 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Style } from "./Style";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { Store } from "./Store";
-import { StyleSheet } from "react-native";
+import { add } from "./Slice";
+
 
 export default function App() {
   const [modal, setModal] = useState(false);
@@ -47,13 +48,15 @@ const Word = () => {
 
       <View style={Style.word}>
         <View style={Style.wordSegment}>
-          <TouchableOpacity onPress={() => {
-           if(index === 0){
-            return
-           }
+          <TouchableOpacity
+            onPress={() => {
+              if (index === 0) {
+                return;
+              }
 
-             move("previous")
-             }}>
+              move("previous");
+            }}
+          >
             <AntDesign name="left" size={30} color="black" />
           </TouchableOpacity>
         </View>
@@ -62,11 +65,14 @@ const Word = () => {
           <Text style={Style.tr}>{dictionary[index].tr}</Text>
         </View>
         <View style={Style.wordSegment}>
-          <TouchableOpacity onPress={() => {
-            if(index + 1 === dictionary.length){
-              return
-            }
-            move("next")}}>
+          <TouchableOpacity
+            onPress={() => {
+              if (index + 1 === dictionary.length) {
+                return;
+              }
+              move("next");
+            }}
+          >
             <AntDesign name="right" size={30} color="black" />
           </TouchableOpacity>
         </View>
@@ -81,7 +87,7 @@ const Create = (props) => {
     <View style={Style.createButton}>
       <View style={Style.circle}>
         <TouchableOpacity onPress={() => setModal(true)}>
-          <Ionicons name="md-add" size={50} color="white" />
+        <Ionicons name="md-add" size={50} color="white" />
         </TouchableOpacity>
       </View>
       <ModalView {...props} />
@@ -90,6 +96,10 @@ const Create = (props) => {
 };
 
 const ModalView = (props) => {
+  const [en, setEn] = useState("");
+  const [tr, setTr] = useState("");
+  const dispatch = useDispatch();
+
   const { modal, setModal } = props.modal;
   return (
     <Modal
@@ -103,10 +113,27 @@ const ModalView = (props) => {
           <Text style={Style.cross}>x</Text>
         </TouchableOpacity>
 
-        <TextInput placeholder="English" style={Style.textBox} />
-        <TextInput placeholder="Turkish" style={Style.textBox} />
+        <TextInput
+          onChangeText={(e) => setEn(e)}
+          value={en}
+          placeholder="English"
+          style={Style.textBox}
+        />
+        <TextInput
+          onChangeText={(e) => setTr(e)}
+          value={tr}
+          placeholder="Turkish"
+          style={Style.textBox}
+        />
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(add({ en, tr }));
+            setEn("");
+            setTr("");
+            setModal(false);
+          }}
+        >
           <View style={Style.button}>
             <AntDesign name="heart" size={20} color="red" />
             <Text style={Style.buttonText}>Save</Text>
@@ -117,4 +144,3 @@ const ModalView = (props) => {
   );
 };
 
-const styles = StyleSheet.create({});
