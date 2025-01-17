@@ -20,7 +20,6 @@ and navigating between words in different languages.
 
 ## 🛠️ What Has Been Done in the Project?
 - 🔄 Implemented features for adding, viewing, and managing words within the user’s dictionary.
-- ✅ Utilized **Jest** for testing user interactions and ensuring correct functionality.
 - 🎨 Styled the interface with **React Native** components for a cohesive user experience.
 
 ## 📦 Libraries
